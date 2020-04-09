@@ -22,22 +22,22 @@ const App = () => {
 
   return (
     <>
-      <Home />
+      <Home user ={user} setUser={setUser}/>
       <Sidebar user={user} />
     </>
   );
 };
 
-const Home = () => {
+const Home = ({user, setUser }) => {
   return (
     <>
-      <Header />
+      <Header user ={user} setUser={setUser}/>
       <MainContent />
     </>
   );
 };
 
-const Header = () => {
+const Header = ({user, setUser}) => {
   return (
     <header>
       <Navigation />
@@ -82,7 +82,7 @@ const LoginDialogTrigger = () => {
   );
 };
 ```
-
+//** IF WE REMOVE ONE COMPONANT I T WOULD BREAK THE CHAIN
 ---
 
 This is no fun!
@@ -112,6 +112,7 @@ export const UserContext = React.createContext(null);
 
 const App = () => {
   return (
+    // WRAPPING THE WHOLE APP SO THE WHOLE APP HAS ACCESS TO IT
     <UserContext.Provider value={{ username: 'Alfalfa' }}>
       <Header />
       <Main>
@@ -192,18 +193,80 @@ const Navigation = ({ user, setUser }) => {
   );
 };
 ```
+------------ WITH GLOBAL CONTEXT BELOW
 
----
 
 ```jsx
 const App = () => {
-  const [dialog, setDialog] = React.useState(null);
+  
+ export const userContext = React.createContext(null);
 
+
+  const [user, setUser] = React.useState({ username: 'Alfalfa' });
+
+  return 
+  <userContext.provider value = {{ user, setUser}}>
+  <Home } />;
+   <userContext/>
+};
+
+const Home = () => {
   return (
     <>
+      <Header  />
+      <MainContent />
+    </>
+  );
+};
+
+const Header = () => {
+  return (
+    <header>
+      <Navigation user={user} setUser={setUser} />
+    </header>
+  );
+};
+
+const Navigation = () => {
+//same page here so no need to import
+  const {user, setUser} = useContext(userContext)
+
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/about">About</Link>
+        </li>
+        {user && (
+          <li>
+            <button onClick={() => setUser(null)}>Log out</button>
+          </li>
+        )}
+      </ul>
+    </nav>
+  );
+};
+```
+---
+
+```jsx
+export dialogContect = createContect(null)
+const App = () => {
+
+  
+  const [dialog, setDialog] = React.useState(null);
+
+
+
+  return (
+    <dialogContect.provider value ={{dialog, setDialog}}>
+    <dialogContect>
       <MainContent dialog={dialog} setDialog={setDialog} />
       <Dialog currentDialog={dialog} />
-    </>
+    </dialogContect>
   );
 };
 

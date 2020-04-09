@@ -1,46 +1,57 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import items from "./data"
 
-import useInterval from '../hooks/use-interval.hook';
 
+//***importing the game context below****/
+import { GameContext } from "./GameContext"
 import cookieSrc from '../cookie.svg';
 import Item from './Item';
 
-const items = [
-  { id: 'cursor', name: 'Cursor', cost: 10, value: 1 },
-  { id: 'grandma', name: 'Grandma', cost: 100, value: 10 },
-  { id: 'farm', name: 'Farm', cost: 1000, value: 80 }
-];
+// const items = [
+//   { id: 'cursor', name: 'Cursor', cost: 10, value: 1 },
+//   { id: 'grandma', name: 'Grandma', cost: 100, value: 10 },
+//   { id: 'farm', name: 'Farm', cost: 1000, value: 80 }
+// ];
 
-const calculateCookiesPerSecond = purchasedItems => {
-  return Object.keys(purchasedItems).reduce((acc, itemId) => {
-    const numOwned = purchasedItems[itemId];
-    const item = items.find(item => item.id === itemId);
-    const value = item.value;
+// const calculateCookiesPerSecond = purchasedItems => {
+//   return Object.keys(purchasedItems).reduce((acc, itemId) => {
+//     const numOwned = purchasedItems[itemId];
+//     const item = items.find(item => item.id === itemId);
+//     const value = item.value;
 
-    return acc + value * numOwned;
-  }, 0);
-};
+//     return acc + value * numOwned;
+//   }, 0);
+// };
 
 const Game = () => {
-  const [numCookies, setNumCookies] = React.useState(1000);
+const {
+  numCookies,
+  setNumCookies,
+  purchasedItems,
+  setPurchasedItems,
+  cookiesPerSecond
+} = React.useContext(GameContext)
 
-  const [purchasedItems, setPurchasedItems] = React.useState({
-    cursor: 0,
-    grandma: 0,
-    farm: 0
-  });
+  // const [numCookies, setNumCookies] = React.useState(1000);
+
+  // const [purchasedItems, setPurchasedItems] = React.useState({
+  //   cursor: 0,
+  //   grandma: 0,
+  //   farm: 0
+  // });
+  
 
   const incrementCookies = () => {
     setNumCookies(c => c + 1);
   };
 
-  useInterval(() => {
-    const numOfGeneratedCookies = calculateCookiesPerSecond(purchasedItems);
+  // useInterval(() => {
+  //   const numOfGeneratedCookies = calculateCookiesPerSecond(purchasedItems);
 
-    setNumCookies(numCookies + numOfGeneratedCookies);
-  }, 1000);
+  //   setNumCookies(numCookies + numOfGeneratedCookies);
+  // }, 1000);
 
   React.useEffect(() => {
     document.title = `${numCookies} cookies - Cookie Clicker Workshop`;
@@ -69,7 +80,7 @@ const Game = () => {
       <GameArea>
         <Indicator>
           <Total>{numCookies} cookies</Total>
-          <strong>{calculateCookiesPerSecond(purchasedItems)}</strong> cookies
+          <strong>{cookiesPerSecond}</strong> cookies
           per second
         </Indicator>
         <Button onClick={incrementCookies}>

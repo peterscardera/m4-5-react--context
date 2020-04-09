@@ -121,6 +121,10 @@ const Banner = ({ type, message, user }) => {
 ---
 
 ```js
+
+
+
+
 const ContactPage = () => {
   const [message, setMessage] = React.useState('');
   const [messageError, setMessageError] = React.useState(false);

@@ -20,26 +20,27 @@ Sometimes, you'll want to share data with a sibling component.
 
 ```js
 const App = () => {
+  const [searchTerm, setSearchTerm] = React.useState('');
   return (
     <>
-      <Header />
+      <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <MainContent />
     </>
   );
 };
 
-const Header = () => {
-  const [searchTerm, setSearchTerm] = React.useState('');
+const Header = ({searchTerm, setSearchTerm}) => {
+  //const [searchTerm, setSearchTerm] = React.useState(''); REMOVED AND MOVED TO THE PARENT WHICH IS APP 
 
   return (
     <header>
       <Logo />
-      <SearchInput value={searchTerm} onChange={setSearchTerm} />
+     <SearchInput value={searchTerm} onChange={setSearchTerm} />// REMOVED AND MOVED OT APP 
     </header>
   );
 };
 
-const MainContent = () => {
+const MainContent = ({setSearchTerm}) => {
   return (
     <main>
       {/* how do I access `searchTerm`? */}
